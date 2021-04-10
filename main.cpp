@@ -6,6 +6,8 @@
 
 #include "stdafx.h"
 
+#include "loger/tloger.h"
+
 int main(int argc, char *argv[])
 {
 	// 通过命令行参数启动调试进程
