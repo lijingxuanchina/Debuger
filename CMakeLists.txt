@@ -25,4 +25,4 @@ MACRO(Add_PCH)
 ENDMACRO()
 Add_PCH()
 
-execute_process(COMMAND cmake -P ../Coding/cmake/debuger.cmake)
+execute_process(COMMAND cmake -P ../Debuger/cmake/debuger.cmake)
