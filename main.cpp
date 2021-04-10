@@ -4,7 +4,7 @@
 * 日期：	2021/04/08 0:21
 */
 
-#include <windows.h>
+#include "stdafx.h"
 
 int main(int argc, char *argv[])
 {
