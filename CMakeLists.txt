@@ -11,7 +11,7 @@ file(GLOB_RECURSE DEBUGER_SRC
 add_executable(debuger ${DEBUGER_SRC})
 
 SET(PCH_HEADER_FILE "stdafx.h")
-SET(PCH_SOURCE_FILE "../Coding/stdafx.cpp")
+SET(PCH_SOURCE_FILE "../Debuger/stdafx.cpp")
 SET(PCH_DIR ${CMAKE_CURRENT_BINARY_DIR}/PCH)
 
 MACRO(Add_PCH)
