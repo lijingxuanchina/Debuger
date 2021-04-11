@@ -4,10 +4,10 @@
 
 namespace
 {
-const char* const Separator = "\\";
-const char* const NewLine = "\n";
-const char* const TLogerDir = "TLoger";
-const char* const TLogerName = "tloger.log";
+const wchar_t* const Separator = L"\\";
+const wchar_t* const NewLine = L"\n";
+const wchar_t* const TLogerDir = L"TLoger";
+const wchar_t* const TLogerName = L"tloger.log";
 }
 
 TLoger::TLoger()
@@ -29,20 +29,24 @@ void TLoger::log(const CString& logInfo)
 	}
 
 	FILE* tlogFile = nullptr;
-	if (fopen_s(&tlogFile, m_tlogPath, "a"))
+	if (_wfopen_s(&tlogFile, m_tlogPath, L"a"))
 	{
 		return;
 	}
 
-	if (EOF == fputs(logInfo + NewLine, tlogFile))
+	if (!tlogFile)
 	{
 		return;
 	}
+
+	fputws(logInfo + NewLine, tlogFile);
+
+	fclose(tlogFile);
 }
 
 void TLoger::makeSureLogFileExist()
 {
-	char buffer[MAX_PATH] = { 0 };
+	wchar_t buffer[MAX_PATH] = { 0 };
 	::SHGetSpecialFolderPath(NULL, buffer, CSIDL_LOCAL_APPDATA, TRUE);
 
 	CString appDataPath(buffer);

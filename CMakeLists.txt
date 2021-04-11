@@ -11,6 +11,7 @@ file(GLOB_RECURSE DEBUGER_SRC
 	loger/tloger.h
 	loger/tloger.cpp)
 add_definitions(-DUNICODE -D_UNICODE)
+SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /subsystem:windows") 
 add_executable(debuger ${DEBUGER_SRC})
 
 RUN_CMAKE_SCRIPTS()

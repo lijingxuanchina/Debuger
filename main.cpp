@@ -6,16 +6,20 @@
 
 #include "stdafx.h"
 
-int main(int argc, char *argv[])
+int WINAPI wWinMain(
+	_In_ HINSTANCE hInstance,
+	_In_opt_ HINSTANCE hPrevInstance,
+	_In_ LPWSTR lpCmdLine,
+	_In_ int nShowCmd)
 {
 	// 通过命令行参数启动调试进程
 	// 用户态下调试器启动进程
-	STARTUPINFO startupinfo = { 0 };
-	startupinfo.cb = sizeof(startupinfo);
+	STARTUPINFO startupInfo = { 0 };
+	startupInfo.cb = sizeof(startupInfo);
 	PROCESS_INFORMATION processInfo = { 0 };
-	if (!::CreateProcess(
-		NULL, argv[0], NULL, NULL, FALSE, DEBUG_PROCESS, NULL, NULL,
-		&startupinfo, &processInfo))
+	if (!::CreateProcessW(
+		NULL, lpCmdLine, NULL, NULL, FALSE, DEBUG_PROCESS, NULL, NULL,
+		&startupInfo, &processInfo))
 	{
 		DWORD errorCode = ::GetLastError();
 	}
