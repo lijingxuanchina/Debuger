@@ -5,6 +5,7 @@
 namespace
 {
 const char* const Separator = "\\";
+const char* const NewLine = "\n";
 const char* const TLogerDir = "TLoger";
 const char* const TLogerName = "tloger.log";
 }
@@ -33,7 +34,7 @@ void TLoger::log(const CString& logInfo)
 		return;
 	}
 
-	if (EOF == fputs(logInfo, tlogFile))
+	if (EOF == fputs(logInfo + NewLine, tlogFile))
 	{
 		return;
 	}

@@ -1,5 +1,5 @@
-#ifndef __TLOGER_H
-#define __TLOGER_H
+#ifndef __TLOGER_H_
+#define __TLOGER_H_
 
 class TLoger
 {
@@ -15,4 +15,4 @@ private:
 	CString m_tlogPath;
 };
 
-#endif // __TLOGER_H
+#endif // __TLOGER_H_
