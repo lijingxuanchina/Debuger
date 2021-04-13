@@ -5,4 +5,6 @@
 #include <atlstr.h>
 #include <shlobj_core.h>
 
+#include "loger/tloger.h"
+
 #endif // __STDAFX_H_

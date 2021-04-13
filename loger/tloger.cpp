@@ -2,6 +2,8 @@
 
 #include "tloger.h"
 
+TLoger g_tloger;
+
 namespace
 {
 const wchar_t* const Separator = L"\\";
@@ -17,31 +19,6 @@ TLoger::TLoger()
 
 TLoger::~TLoger()
 {
-}
-
-void TLoger::log(const CString& logInfo)
-{
-	makeSureLogFileExist();
-
-	if (m_tlogPath.IsEmpty())
-	{
-		return;
-	}
-
-	FILE* tlogFile = nullptr;
-	if (_wfopen_s(&tlogFile, m_tlogPath, L"a"))
-	{
-		return;
-	}
-
-	if (!tlogFile)
-	{
-		return;
-	}
-
-	fputws(logInfo + NewLine, tlogFile);
-
-	fclose(tlogFile);
 }
 
 void TLoger::makeSureLogFileExist()
@@ -64,4 +41,25 @@ void TLoger::makeSureLogFileExist()
 	}
 
 	m_tlogPath = tlogPath;
+}
+
+const char* TLoger::getFileName(const char* file)
+{
+	auto index = strrchr(file, '\\');
+	if (!index)
+	{
+		return "";
+	}
+
+	index = index + 1;
+	return index;
+}
+
+const char* TLoger::getTime(char* buffer)
+{
+	SYSTEMTIME sysTime;
+	::GetLocalTime(&sysTime);
+	snprintf(buffer, MAX_PATH, "%4d/%02d/%02d %02d:%02d",
+		sysTime.wYear, sysTime.wMonth, sysTime.wDay, sysTime.wHour, sysTime.wMinute);
+	return buffer;
 }
