@@ -1,4 +1,4 @@
-#ifndef __TLOGER_H_
+﻿#ifndef __TLOGER_H_
 #define __TLOGER_H_
 
 #include<thread>

@@ -1,4 +1,4 @@
-#ifndef __RESULTINFO_H_
+﻿#ifndef __RESULTINFO_H_
 #define __RESULTINFO_H_
 
 enum ResultCode

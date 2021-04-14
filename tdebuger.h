@@ -1,4 +1,4 @@
-#ifndef __TDEBUGER_H_
+ï»¿#ifndef __TDEBUGER_H_
 #define __TDEBUGER_H_
 
 class TDebuger
@@ -12,8 +12,8 @@ private:
 	DWORD processDebugEvent(
 		const DEBUG_EVENT& debugEvent,
 		const PROCESS_INFORMATION& processInfo);
-	// TODO lijingxuan Íê³ÉÆäËûµ÷ÊÔÊÂ¼ş
-	// ×îÖØÒªÎª exception ÊÂ¼ş
+	// TODO lijingxuan å®Œæˆå…¶ä»–è°ƒè¯•äº‹ä»¶
+	// æœ€é‡è¦ä¸º exception äº‹ä»¶
 	void processOutputDebugStringEvent(
 		const DEBUG_EVENT& debugEvent,
 		const PROCESS_INFORMATION& processInfo);

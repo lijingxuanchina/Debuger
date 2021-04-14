@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 
 #include "TDebuger.h"
 
@@ -78,6 +78,6 @@ void TDebuger::processOutputDebugStringEvent(
 CString TDebuger::readRemoteString(
 	HANDLE process, LPVOID address, WORD length, BOOL unicode)
 {
-	// TODO lijingxuan Íê³ÉÕâ¸ö¹¦ÄÜ
+	// TODO lijingxuan å®Œæˆè¿™ä¸ªåŠŸèƒ½
 	return CString();
 }
