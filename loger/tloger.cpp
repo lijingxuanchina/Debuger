@@ -57,7 +57,7 @@ const char* TLoger::getFileName(const char* file)
 
 const char* TLoger::getTime(char* buffer)
 {
-	SYSTEMTIME sysTime;
+	SYSTEMTIME sysTime = { 0 };
 	::GetLocalTime(&sysTime);
 	snprintf(buffer, MAX_PATH, "%4d/%02d/%02d %02d:%02d",
 		sysTime.wYear, sysTime.wMonth, sysTime.wDay, sysTime.wHour, sysTime.wMinute);

@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <atlstr.h>
 #include <shlobj_core.h>
+#include <iostream>
 
 #include "loger/tloger.h"
 

@@ -7,6 +7,7 @@
 #include "stdafx.h"
 
 #include "resultinfo.h"
+#include "tdebuger.h"
 
 int WINAPI wWinMain(
 	_In_ HINSTANCE hInstance,
@@ -27,6 +28,9 @@ int WINAPI wWinMain(
 		LOGA_ERROR("create process failed, error code: %lu", ::GetLastError());
 		return Result_CreateProcessFailed;
 	}
+
+	TDebuger tdebuger;
+	tdebuger.startDebug(processInfo);
 
 	// 调试结束释放进程以及线程句柄
 	::CloseHandle(processInfo.hThread);
