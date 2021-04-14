@@ -6,6 +6,8 @@
 
 #include "stdafx.h"
 
+#include "resultinfo.h"
+
 int WINAPI wWinMain(
 	_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -22,12 +24,13 @@ int WINAPI wWinMain(
 		NULL, lpCmdLine, NULL, NULL, FALSE, DEBUG_PROCESS, NULL, NULL,
 		&startupInfo, &processInfo))
 	{
-		DWORD errorCode = ::GetLastError();
+		LOGA_ERROR("create process failed, error code: %lu", ::GetLastError());
+		return Result_CreateProcessFailed;
 	}
 
 	// 调试结束释放进程以及线程句柄
 	::CloseHandle(processInfo.hThread);
 	::CloseHandle(processInfo.hProcess);
 
-	return 0;
+	return Result_Success;
 }

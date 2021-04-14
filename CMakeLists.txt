@@ -8,6 +8,7 @@ file(GLOB_RECURSE DEBUGER_SRC
 	stdafx.h
 	stdafx.cpp
 	main.cpp
+	resultinfo.h
 	loger/tloger.h
 	loger/tloger.cpp)
 add_definitions(-DUNICODE -D_UNICODE)
