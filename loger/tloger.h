@@ -81,12 +81,12 @@ extern TLoger g_tloger;
 
 #define __THREADID__ (*(uint32_t*)&std::this_thread::get_id())
 
-#define LOGA_INFO(format, args) g_tloger.logA(_getpid(), __THREADID__,\
-		__LINE__, "[INFO]", __FILE__, __FUNCTION__, format, args); 
-#define LOGA_WARNING(format, args) g_tloger.logA(_getpid(), __THREADID__,\
-		__LINE__, "[WARNING]", __FILE__, __FUNCTION__, format, args); 
-#define LOGA_ERROR(format, args) g_tloger.logA(_getpid(), __THREADID__,\
-		__LINE__, "[ERROR]", __FILE__, __FUNCTION__, format, args); 
-#define LOGA(format) LOGA_INFO(format, "")
+#define LOGA_INFO(format, ...) g_tloger.logA(_getpid(), __THREADID__,\
+		__LINE__, "[INFO]", __FILE__, __FUNCTION__, format, __VA_ARGS__); 
+#define LOGA_WARNING(format, ...) g_tloger.logA(_getpid(), __THREADID__,\
+		__LINE__, "[WARNING]", __FILE__, __FUNCTION__, format, __VA_ARGS__); 
+#define LOGA_ERROR(format, ...) g_tloger.logA(_getpid(), __THREADID__,\
+		__LINE__, "[ERROR]", __FILE__, __FUNCTION__, format, __VA_ARGS__); 
+#define LOGA LOGA_INFO
 
 #endif // __TLOGER_H_
