@@ -63,6 +63,7 @@ DWORD TDebuger::processDebugEvent(
 		processExitProcessDebugEvent(contionueStatus);
 		break;
 	case LOAD_DLL_DEBUG_EVENT:
+		processLoadDllDebugEvent(debugEvent);
 		break;
 	case UNLOAD_DLL_DEBUG_EVENT:
 		break;
@@ -119,6 +120,11 @@ void TDebuger::processCreateProcessDebugEvent(
 void TDebuger::processExitProcessDebugEvent(DWORD& continueStatus)
 {
 	continueStatus = 0;
+}
+
+void TDebuger::processLoadDllDebugEvent(const DEBUG_EVENT& debugEvent)
+{
+	// TODO lijingxuan 获取 DLL 名称
 }
 
 CString TDebuger::readRemoteString(

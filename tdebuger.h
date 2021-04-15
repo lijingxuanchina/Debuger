@@ -24,6 +24,8 @@ private:
 		const PROCESS_INFORMATION& processInfo);
 	void processExitProcessDebugEvent(
 		DWORD& continueStatus);
+	void processLoadDllDebugEvent(
+		const DEBUG_EVENT& debugEvent);
 
 private:
 	CString readRemoteString(HANDLE process, LPVOID address, WORD length, BOOL unicode);
