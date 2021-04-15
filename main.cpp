@@ -16,6 +16,7 @@ int WINAPI wWinMain(
 	_In_ int nShowCmd)
 {
 	LOGA("start debug");
+	OUTPUT("start debug");
 	// 通过命令行参数启动调试进程
 	// 用户态下调试器启动进程
 	STARTUPINFO startupInfo = { 0 };

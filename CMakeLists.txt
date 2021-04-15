@@ -11,6 +11,8 @@ file(GLOB_RECURSE DEBUGER_SRC
 	resultinfo.h
 	tdebuger.h
 	tdebuger.cpp
+	toutputhelper.h
+	toutputhelper.cpp
 	loger/tloger.h
 	loger/tloger.cpp)
 add_definitions(-DUNICODE -D_UNICODE)

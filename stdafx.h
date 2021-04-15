@@ -7,6 +7,7 @@
 #include <iostream>
 #include <debugapi.h>
 
+#include "toutputhelper.h"
 #include "loger/tloger.h"
 
 #endif // __STDAFX_H_

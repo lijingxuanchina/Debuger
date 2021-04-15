@@ -22,13 +22,21 @@ void TDebuger::startDebug(const PROCESS_INFORMATION& processInfo)
 		if (!::WaitForDebugEvent(&debugEvent, INFINITE))
 		{
 			LOGA_ERROR("wait for debug event failed, error code:%lu", ::GetLastError());
+			OUTPUT("wait for debug event failed, error code:%lu", ::GetLastError());
 			break;
 		}
 		endDisposition = processDebugEvent(debugEvent, processInfo);
+		if (!endDisposition)
+		{
+			OUTPUT("exit process, exit code:%lu", debugEvent.u.ExitProcess.dwExitCode);
+			LOGA("exit process, exit code:%lu", debugEvent.u.ExitProcess.dwExitCode);
+			return;
+		}
 		if (!::ContinueDebugEvent(
 			debugEvent.dwProcessId, debugEvent.dwThreadId, endDisposition))
 		{
 			LOGA_ERROR("continue debug event failed, error code:%lu", ::GetLastError());
+			OUTPUT("continue debug event failed, error code:%lu", ::GetLastError());
 			break;
 		}
 	}
@@ -75,12 +83,11 @@ void TDebuger::processOutputDebugStringEvent(
 	const PROCESS_INFORMATION& processInfo)
 {
 	auto outputDebugStringInfo = debugEvent.u.DebugString;
-	wcout << _T("OutputDebugStringEvent\nMessage:\t");
-	wcout << readRemoteString(
+	OUTPUT("%ws", readRemoteString(
 		processInfo.hProcess,
 		outputDebugStringInfo.lpDebugStringData,
 		outputDebugStringInfo.nDebugStringLength,
-		outputDebugStringInfo.fUnicode) << endl;
+		outputDebugStringInfo.fUnicode));
 }
 
 void TDebuger::processExceptionDebugEvent(
@@ -89,11 +96,6 @@ void TDebuger::processExceptionDebugEvent(
 	DWORD& continueStatus)
 {
 	// TODO lijingxuan 完成更多对于 exception event 的处理
-	cout << "ExceptionCode:\t" << std::hex <<
-		debugEvent.u.Exception.ExceptionRecord.ExceptionCode << endl;
-	cout << "FirstChance:\t" <<
-		debugEvent.u.Exception.dwFirstChance << endl;
-
 	switch (debugEvent.u.Exception.ExceptionRecord.ExceptionCode)
 	{
 	case EXCEPTION_BREAKPOINT:
@@ -110,9 +112,8 @@ void TDebuger::processCreateProcessDebugEvent(
 	const DEBUG_EVENT& debugEvent,
 	const PROCESS_INFORMATION& processInfo)
 {
-	::OutputDebugStringW(L"success create debug process!");
-	cout << "success create debug process!" << endl;
-	cout << "pid:" << processInfo.dwProcessId << endl;
+	OUTPUT("success create debug process!");
+	OUTPUT("pid:%lu", processInfo.dwProcessId);
 }
 
 void TDebuger::processExitProcessDebugEvent(DWORD& continueStatus)
@@ -130,6 +131,7 @@ CString TDebuger::readRemoteString(
 			process, address, &wbuffer, length * sizeof(WCHAR), NULL))
 		{
 			LOGA_ERROR("read process memory failed, error code:%lu", ::GetLastError());
+			OUTPUT("read process memory failed, error code:%lu", ::GetLastError());
 			return CString("can not read remote string");
 		}
 
@@ -142,6 +144,7 @@ CString TDebuger::readRemoteString(
 			process, address, &buffer, length, NULL))
 		{
 			LOGA_ERROR("read process memory failed, error code:%lu", ::GetLastError());
+			OUTPUT("read process memory failed, error code:%lu", ::GetLastError());
 			return CString("can not read remote string");
 		}
 
