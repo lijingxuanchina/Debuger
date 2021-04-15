@@ -12,11 +12,18 @@ private:
 	DWORD processDebugEvent(
 		const DEBUG_EVENT& debugEvent,
 		const PROCESS_INFORMATION& processInfo);
-	// TODO lijingxuan 完成其他调试事件
-	// 最重要为 exception 事件
 	void processOutputDebugStringEvent(
 		const DEBUG_EVENT& debugEvent,
 		const PROCESS_INFORMATION& processInfo);
+	void processExceptionDebugEvent(
+		const DEBUG_EVENT& debugEvent,
+		const PROCESS_INFORMATION& processInfo,
+		DWORD& continueStatus);
+	void processCreateProcessDebugEvent(
+		const DEBUG_EVENT& debugEvent,
+		const PROCESS_INFORMATION& processInfo);
+	void processExitProcessDebugEvent(
+		DWORD& continueStatus);
 
 private:
 	CString readRemoteString(HANDLE process, LPVOID address, WORD length, BOOL unicode);

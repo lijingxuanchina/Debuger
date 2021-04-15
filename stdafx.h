@@ -5,6 +5,7 @@
 #include <atlstr.h>
 #include <shlobj_core.h>
 #include <iostream>
+#include <debugapi.h>
 
 #include "loger/tloger.h"
 
