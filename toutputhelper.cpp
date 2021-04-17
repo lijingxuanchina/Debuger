@@ -14,9 +14,9 @@ TOutPutHelper::TOutPutHelper()
 		if (!::AllocConsole())
 		{
 			LOGA_ERROR("failed get console");
-			m_isSuccessGetConsole = false;
 			return;
 		}
+		m_isSuccessGetConsole = true;
 	}
 
 	m_consoleHnadle = ::GetStdHandle(STD_OUTPUT_HANDLE);

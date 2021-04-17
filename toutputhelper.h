@@ -15,7 +15,7 @@ public:
 	void output(const char* info, Args... args);
 
 private:
-	bool m_isSuccessGetConsole = true;
+	bool m_isSuccessGetConsole = false;
 	HANDLE m_consoleHnadle = nullptr;
 };
 
