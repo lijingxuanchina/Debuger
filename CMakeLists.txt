@@ -13,6 +13,8 @@ file(GLOB_RECURSE DEBUGER_SRC
 	tdebuger.cpp
 	toutputhelper.h
 	toutputhelper.cpp
+	tlifespanhelper.h
+	tlifespanhelper.cpp
 	loger/tloger.h
 	loger/tloger.cpp)
 add_definitions(-DUNICODE -D_UNICODE)

@@ -1,10 +1,12 @@
 ﻿#include "stdafx.h"
 
-#include "TDebuger.h"
+#include "tdebuger.h"
+#include "tlifespanhelper.h"
 
-using std::cout;
-using std::endl;
-using std::wcout;
+namespace
+{
+const int Max_Buffer_Size = MAX_PATH * 2;
+}
 
 TDebuger::TDebuger()
 {
@@ -113,8 +115,8 @@ void TDebuger::processCreateProcessDebugEvent(
 	const DEBUG_EVENT& debugEvent,
 	const PROCESS_INFORMATION& processInfo)
 {
-	OUTPUT("success create debug process!");
-	OUTPUT("pid:%lu", processInfo.dwProcessId);
+	OUTPUT("Success create debug process!");
+	OUTPUT("Pid:%lu", processInfo.dwProcessId);
 }
 
 void TDebuger::processExitProcessDebugEvent(DWORD& continueStatus)
@@ -122,9 +124,10 @@ void TDebuger::processExitProcessDebugEvent(DWORD& continueStatus)
 	continueStatus = 0;
 }
 
-void TDebuger::processLoadDllDebugEvent(const DEBUG_EVENT& debugEvent)
+void TDebuger::processLoadDllDebugEvent(
+	const DEBUG_EVENT& debugEvent)
 {
-	// TODO lijingxuan 获取 DLL 名称
+	OUTPUT("Load dll: %ws", getLoadDllName(debugEvent));
 }
 
 CString TDebuger::readRemoteString(
@@ -132,7 +135,7 @@ CString TDebuger::readRemoteString(
 {
 	if (unicode)
 	{
-		WCHAR wbuffer[MAX_PATH] = { 0 };
+		WCHAR wbuffer[Max_Buffer_Size] = { 0 };
 		if (!::ReadProcessMemory(
 			process, address, &wbuffer, length * sizeof(WCHAR), NULL))
 		{
@@ -145,7 +148,7 @@ CString TDebuger::readRemoteString(
 	}
 	else
 	{
-		CHAR buffer[MAX_PATH] = { 0 };
+		CHAR buffer[Max_Buffer_Size] = { 0 };
 		if (!::ReadProcessMemory(
 			process, address, &buffer, length, NULL))
 		{
@@ -156,4 +159,115 @@ CString TDebuger::readRemoteString(
 
 		return CString(buffer);
 	}
+}
+
+CString TDebuger::getLoadDllName(const DEBUG_EVENT& debugEvent)
+{
+	HANDLE fileHandle = debugEvent.u.LoadDll.hFile;
+	DWORD fileSizeHigh = 0;
+	DWORD fileSizeLow = ::GetFileSize(fileHandle, &fileSizeHigh);
+	if (INVALID_FILE_SIZE == fileSizeLow)
+	{
+		CString errorInfo = "get load file size failed";
+		LOGA_ERROR("%ws", errorInfo);
+		OUTPUT("%ws", errorInfo);
+		return errorInfo;
+	}
+
+	if (0 == fileSizeLow && 0 == fileSizeHigh)
+	{
+		CString errorInfo = "can not map a file with a length of zero";
+		LOGA_ERROR("%ws", errorInfo);
+		OUTPUT("%ws", errorInfo);
+		return errorInfo;
+	}
+
+	HANDLE fileMap = ::CreateFileMappingW(fileHandle, NULL, PAGE_READONLY, 0, 1, NULL);
+	if (!fileMap)
+	{
+		CString errorInfo;
+		errorInfo.Format(L"create file map failed, error code:%lu", ::GetLastError());
+		LOGA_ERROR("%ws", errorInfo);
+		OUTPUT("%ws", errorInfo);
+		return errorInfo;
+	}
+
+	TLifeSpanHelper tlifeSpanHelper;
+	tlifeSpanHelper.setHandle(fileHandle);
+
+	void* memory = ::MapViewOfFile(fileMap, FILE_MAP_READ, 0, 0, 1);
+	if (!memory)
+	{
+		auto errorCode = ::GetLastError();
+		CString errorInfo;
+		errorInfo.Format(L"map view of file failed, error code:%lu", errorCode);
+		LOGA_ERROR("%ws", errorInfo);
+		OUTPUT("%ws", errorInfo);
+		return errorInfo;
+	}
+
+	tlifeSpanHelper.setVoidPoint(memory);
+
+	WCHAR fileNameBuffer[Max_Buffer_Size] = { 0 };
+	if (!::GetMappedFileNameW(::GetCurrentProcess(), memory, fileNameBuffer, Max_Buffer_Size))
+	{
+		auto errorCode = ::GetLastError();
+		CString errorInfo;
+		errorInfo.Format(L"get mapped file name failed, error code:%lu", errorCode);
+		LOGA_ERROR("%ws", errorInfo);
+		OUTPUT("%ws", errorInfo);
+		return errorInfo;
+	}
+
+	WCHAR tempBuffer[Max_Buffer_Size] = { 0 };
+	if (!::GetLogicalDriveStringsW(Max_Buffer_Size, tempBuffer))
+	{
+		auto errorCode = ::GetLastError();
+		CString errorInfo;
+		errorInfo.Format(L"get logical drive strings failed, error code:%lu", errorCode);
+		LOGA_ERROR("%ws", errorInfo);
+		OUTPUT("%ws", errorInfo);
+		return errorInfo;
+	}
+
+	WCHAR nameBuffer[Max_Buffer_Size] = { 0 };
+	WCHAR driver[3] = TEXT(" :");
+	bool isFound = false;
+	WCHAR* pointToTempBuffer = tempBuffer;
+
+	do
+	{
+		*driver = *pointToTempBuffer;
+		if (!::QueryDosDeviceW(driver, nameBuffer, Max_Buffer_Size))
+		{
+			auto errorCode = ::GetLastError();
+			CString errorInfo;
+			errorInfo.Format(L"query dos device failed, error code:%lu", errorCode);
+			LOGA_ERROR("%ws", errorInfo);
+			OUTPUT("%ws", errorInfo);
+			return errorInfo;
+		}
+
+		auto nameLength = _tcslen(nameBuffer);
+		if (nameLength > Max_Buffer_Size)
+		{
+			return CString("get name length failed");
+		}
+
+		isFound = (0 == _tcsnicmp(fileNameBuffer, nameBuffer, nameLength)) &&
+			(_T('\\') == *(fileNameBuffer + nameLength));
+		if (!isFound)
+		{
+			return CString("can not find char");
+		}
+
+		WCHAR tempFile[Max_Buffer_Size] = { 0 };
+		::StringCchPrintfW(tempFile, Max_Buffer_Size, TEXT("%ws%ws"), driver, fileNameBuffer + nameLength);
+		::StringCchCopyNW(fileNameBuffer, Max_Buffer_Size, tempFile, _tcslen(tempFile));
+
+		while (*pointToTempBuffer++);
+
+	} while (!isFound && *pointToTempBuffer);
+
+	return CString(fileNameBuffer);
 }

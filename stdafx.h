@@ -4,8 +4,9 @@
 #include <windows.h>
 #include <atlstr.h>
 #include <shlobj_core.h>
-#include <iostream>
 #include <debugapi.h>
+#include <psapi.h>
+#include <strsafe.h>
 
 #include "toutputhelper.h"
 #include "loger/tloger.h"

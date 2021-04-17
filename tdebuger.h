@@ -29,6 +29,7 @@ private:
 
 private:
 	CString readRemoteString(HANDLE process, LPVOID address, WORD length, BOOL unicode);
+	CString getLoadDllName(const DEBUG_EVENT& debugEvent);
 };
 
 #endif // __TDEBUGER_H_
